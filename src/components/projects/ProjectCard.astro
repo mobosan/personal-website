@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Card from '../common/Card.astro';
+import Tag from '../common/Tag.astro';
+import Badge from '../common/Badge.astro';
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+const { data, id } = project;
+---
+
+<Card class="project-card">
+  <a class="project-cover block" href={`/projects/${id}/`} tabindex="-1" aria-hidden="true">
+    <img src={data.cover} alt="" width="700" height="380" loading="lazy" />
+    <span class="cover-label">{data.example ? 'CONCEPT / 示例项目' : data.category}</span>
+  </a>
+  <div class="card-body">
+    <div class="card-topline">
+      <h3>
+        <a href={`/projects/${id}/`}>{data.title}</a>
+      </h3>
+      <Badge tone={data.status === '已完成' ? 'green' : 'accent'}>{data.status}</Badge>
+    </div>
+    <p>{data.description}</p>
+    <div class="card-meta">
+      {data.stack.map((tag) => (
+        <Tag>{tag}</Tag>
+      ))}
+    </div>
+  </div>
+</Card>

@@ -1,0 +1,31 @@
+---
+import type { Demo } from '../../data/demos';
+import Card from './Card.astro';
+import Badge from './Badge.astro';
+import Tag from './Tag.astro';
+interface Props {
+  demo: Demo;
+}
+const { demo } = Astro.props;
+---
+
+<Card>
+  <a href={`/lab/${demo.slug}/`} class="project-cover block" aria-hidden="true" tabindex="-1">
+    <img src={demo.cover} alt="" width="700" height="380" loading="lazy" />
+    <span class="cover-label">{demo.category}</span>
+  </a>
+  <div class="card-body">
+    <div class="card-topline">
+      <h3>
+        <a href={`/lab/${demo.slug}/`}>{demo.title}</a>
+      </h3>
+      <Badge tone={demo.status === '可体验' ? 'green' : 'muted'}>{demo.status}</Badge>
+    </div>
+    <p>{demo.description}</p>
+    <div class="card-meta">
+      {demo.stack.map((tag) => (
+        <Tag>{tag}</Tag>
+      ))}
+    </div>
+  </div>
+</Card>

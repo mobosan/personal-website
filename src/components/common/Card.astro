@@ -1,0 +1,9 @@
+---
+interface Props {
+  class?: string;
+}
+---
+
+<article class:list={['card', Astro.props.class]}>
+  <slot />
+</article>

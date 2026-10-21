@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoCard from '../../components/common/DemoCard.astro';
+import FilterBar from '../../components/common/FilterBar.astro';
+import { demos } from '../../data/demos';
+---
+
+<BaseLayout
+  title="在线实验室"
+  description="亲手体验创意编程与交互工具：粒子场、渐变工作台，以及未来的 AI 实验。"
+>
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">THE PLAYGROUND</span>
+      <h1>给好奇心，一个游乐场。</h1>
+      <p>这里的想法可以点击、拖动、调试。放下说明书，从一次小小的实验开始。</p>
+    </header>
+    <FilterBar
+      categories={['创意编程', '实用工具', 'AI 实验']}
+      total={demos.length}
+      noun="个实验"
+    />
+    <div class="project-grid">
+      {demos.map((demo) => (
+        <div data-filter-item data-categories={JSON.stringify([demo.category])}>
+          <DemoCard demo={demo} />
+        </div>
+      ))}
+    </div>
+    <p class="sample-notice">
+      粒子场与配色工作台可以直接运行。AI Agent 沙盒仅为架构规划，尚未连接后端。
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,68 @@
+---
+interface Props {
+  categories: string[];
+  search?: boolean;
+  total: number;
+  noun?: string;
+}
+const { categories, search = false, total, noun = '项内容' } = Astro.props;
+---
+
+<div class="filter-bar">
+  <div class="filter-buttons" role="group" aria-label="按分类筛选">
+    {['全部', ...categories].map((category, i) => (
+      <button
+        class="filter-button"
+        data-filter={category}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+      >
+        {category}
+      </button>
+    ))}
+  </div>
+  {search ? (
+    <input
+      type="search"
+      class="search-field"
+      placeholder="搜索文章标题或摘要…"
+      aria-label="搜索文章"
+    />
+  ) : (
+    <span class="results-count" aria-live="polite">
+      共 <span data-count>{total}</span> {noun}
+    </span>
+  )}
+</div>
+<p data-empty hidden class="empty-state" role="status">
+  没有找到匹配的内容，试试其他关键词或分类。
+</p>
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const items = document.querySelectorAll<HTMLElement>('[data-filter-item]');
+  const input = document.querySelector<HTMLInputElement>('.search-field');
+  let category = '全部';
+  function filter() {
+    let count = 0;
+    const query = input?.value.trim().toLocaleLowerCase() ?? '';
+    items.forEach((item) => {
+      const categories: string[] = JSON.parse(item.dataset.categories || '[]');
+      const visible =
+        (category === '全部' || categories.includes(category)) &&
+        (item.dataset.search || '').toLocaleLowerCase().includes(query);
+      item.hidden = !visible;
+      if (visible) count++;
+    });
+    const empty = document.querySelector<HTMLElement>('[data-empty]');
+    if (empty) empty.hidden = count > 0;
+    const counter = document.querySelector('[data-count]');
+    if (counter) counter.textContent = String(count);
+  }
+  buttons.forEach((button) =>
+    button.addEventListener('click', () => {
+      category = button.dataset.filter || '全部';
+      buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      filter();
+    }),
+  );
+  input?.addEventListener('input', filter);
+</script>

@@ -1,0 +1,87 @@
+---
+import { Menu, ArrowUpRight, Terminal } from '@lucide/astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { navigation, site } from '../../data/site';
+const path = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="/" class="brand" aria-label="Personal Space 首页">
+      <span class="brand-mark">
+        <Terminal size={20} />
+      </span>
+      <span>
+        {site.name}
+        <span class="brand-dot">.</span>
+      </span>
+    </a>
+    <nav class="desktop-nav" aria-label="主导航">
+      {navigation.map((item) => (
+        <a
+          href={item.href}
+          aria-current={
+            (item.href === '/' ? path === '/' : path.startsWith(item.href)) ? 'page' : undefined
+          }
+        >
+          {item.label}
+          {item.href === '/lab/' && <span class="nav-dot"></span>}
+        </a>
+      ))}
+    </nav>
+    <div class="nav-actions">
+      <ThemeToggle />
+      <span class="nav-divider"></span>
+      <a class="nav-contact" href="/about/#contact">
+        聊一聊 <ArrowUpRight size={15} />
+      </a>
+      <button
+        class="icon-button menu-toggle"
+        aria-label="打开导航菜单"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <Menu size={22} />
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="移动端导航" hidden>
+    {navigation.map((item) => (
+      <a
+        href={item.href}
+        aria-current={
+          (item.href === '/' ? path === '/' : path.startsWith(item.href)) ? 'page' : undefined
+        }
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</header>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const menu = document.querySelector<HTMLElement>('#mobile-nav');
+  function close() {
+    if (button && menu) {
+      menu.hidden = true;
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', '打开导航菜单');
+    }
+  }
+  button?.addEventListener('click', () => {
+    if (!menu) return;
+    const open = menu.hidden;
+    menu.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu && !menu.hidden) {
+      close();
+      button?.focus();
+    }
+  });
+  matchMedia('(min-width: 769px)').addEventListener('change', (event) => {
+    if (event.matches) close();
+  });
+</script>

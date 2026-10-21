@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowUpRight } from '@lucide/astro';
+import Tag from '../common/Tag.astro';
+import { formatDate, readingTime } from '../../lib/content';
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+const { post } = Astro.props;
+---
+
+<article class="article-row">
+  <time class="article-date" datetime={post.data.pubDate.toISOString()}>
+    {formatDate(post.data.pubDate)}
+  </time>
+  <div>
+    <h3>
+      <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+    </h3>
+    <p>{post.data.description}</p>
+    <div class="article-tags">
+      {post.data.tags.map((tag) => (
+        <Tag>{tag}</Tag>
+      ))}
+      <span class="reading">
+        {readingTime(post.body)} 分钟阅读{post.data.example && ' · 示例文章'}
+      </span>
+    </div>
+  </div>
+  <ArrowUpRight class="row-arrow" size={18} />
+</article>

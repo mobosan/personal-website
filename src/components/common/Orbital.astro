@@ -1,0 +1,66 @@
+---
+const meridians = Array.from({ length: 17 }, (_, i) => i * 10);
+const latitudes = Array.from({ length: 13 }, (_, i) => (i - 6) * 22);
+---
+
+<div class="hero-art" aria-hidden="true">
+  <span class="orb-label orb-top">FIG. 001 — THE POSSIBILITIES</span>
+  <svg viewBox="0 0 470 390" fill="none">
+    <defs>
+      <linearGradient
+        id="orb-gradient"
+        x1="100"
+        y1="100"
+        x2="350"
+        y2="300"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="#b3a0ff" />
+        <stop offset=".55" stop-color="#807bdd" />
+        <stop offset="1" stop-color="#50a7da" />
+      </linearGradient>
+      <radialGradient id="orb-fill">
+        <stop stop-color="#7770cf" stop-opacity=".08" />
+        <stop offset="1" stop-color="#7770cf" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+    <g stroke="var(--line)" stroke-width=".6">
+      <path d="M20 195H450M235 20V370" stroke-dasharray="3 6" />
+      <circle cx="235" cy="195" r="173" stroke-dasharray="2 9" />
+    </g>
+    <g transform="rotate(-24 235 195)" stroke="url(#orb-gradient)" stroke-width=".7" opacity=".8">
+      <circle cx="235" cy="195" r="142" fill="url(#orb-fill)" />
+      {meridians.map((angle) => (
+        <ellipse
+          cx="235"
+          cy="195"
+          rx={Math.max(2, Math.abs(Math.cos((angle * Math.PI) / 180)) * 142)}
+          ry="142"
+        />
+      ))}
+      {latitudes.map((offset) => (
+        <ellipse
+          cx="235"
+          cy={195 + offset}
+          rx={Math.sqrt(142 ** 2 - offset ** 2)}
+          ry={15 * Math.sqrt(1 - (offset / 142) ** 2)}
+        />
+      ))}
+      <ellipse cx="235" cy="195" rx="203" ry="53" stroke-width="1.2" />
+    </g>
+    <circle cx="410" cy="120" r="4" fill="#b3a0ff" />
+    <circle cx="67" cy="274" r="3" fill="#69cbee" />
+    <path
+      d="M235 13V23M230 18H240M47 105V115M42 110H52M399 304V314M394 309H404"
+      stroke="var(--subtle)"
+      stroke-width="1"
+    />
+  </svg>
+  <div class="orbit-badge">
+    <span style="color:var(--accent)">✦</span> Ideas → Reality
+  </div>
+  <div class="orbit-badge second">
+    <span style="color:var(--cyan)">&lt;/&gt;</span> Always building
+  </div>
+  <span class="orb-label orb-bottom">无限可能，始于一个想法。</span>
+</div>

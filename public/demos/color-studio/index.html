@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>渐变配色工作台 · Personal Space</title>
+    <meta name="description" content="选择颜色与角度，实时生成并复制 CSS 渐变。" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #11151e;
+        color: #e8ecf4;
+        font:
+          14px/1.7 system-ui,
+          'Microsoft YaHei',
+          sans-serif;
+        padding: 26px;
+      }
+      main {
+        max-width: 850px;
+        margin: auto;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 5px;
+      }
+      p {
+        color: #a5afc1;
+        margin: 0 0 20px;
+      }
+      .preview {
+        height: 235px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #7970e5, #75d6bb);
+        display: flex;
+        align-items: flex-end;
+        padding: 25px;
+        margin: 20px 0;
+      }
+      .preview span {
+        font-size: 25px;
+        font-weight: 650;
+        color: #0b1020;
+        background: #ffffffce;
+        padding: 5px 14px;
+        border-radius: 7px;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.5fr;
+        gap: 20px;
+      }
+      label {
+        display: grid;
+        gap: 8px;
+        color: #b8c2d4;
+        font-size: 12px;
+      }
+      input[type='color'] {
+        width: 100%;
+        height: 40px;
+        cursor: pointer;
+        border: 1px solid #354054;
+        border-radius: 6px;
+        background: #1a2130;
+        padding: 3px;
+      }
+      input[type='range'] {
+        width: 100%;
+        accent-color: #aaa7ff;
+      }
+      code {
+        display: block;
+        padding: 14px;
+        background: #0a0e17;
+        border: 1px solid #30394b;
+        border-radius: 8px;
+        font:
+          12px/1.8 Consolas,
+          monospace;
+        overflow-wrap: anywhere;
+        margin: 20px 0 14px;
+        color: #c6c8ff;
+      }
+      button {
+        border: 1px solid #4f526c;
+        border-radius: 7px;
+        background: #292841;
+        color: #e1dfff;
+        padding: 10px 17px;
+        font: inherit;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #3a375c;
+      }
+      :focus-visible {
+        outline: 2px solid #b4b5ff;
+        outline-offset: 4px;
+      }
+      #status {
+        display: inline-block;
+        margin-left: 14px;
+        font-size: 12px;
+      }
+      a {
+        color: #b4b5ff;
+      }
+      footer {
+        margin-top: 18px;
+        font-size: 11px;
+        color: #99a3b5;
+      }
+      @media (max-width: 500px) {
+        body {
+          padding: 18px;
+        }
+        .controls {
+          grid-template-columns: 1fr 1fr;
+        }
+        .angle-control {
+          grid-column: 1/-1;
+        }
+        .preview {
+          height: 205px;
+        }
+        .preview span {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>渐变配色工作台</h1>
+      <p>两种颜色，一些角度，无限种可能。</p>
+      <div class="preview" id="preview" role="img" aria-label="实时渐变预览">
+        <span>Make it yours.</span>
+      </div>
+      <div class="controls">
+        <label>起始颜色 <input type="color" id="start" value="#7970e5" /></label
+        ><label>结束颜色 <input type="color" id="end" value="#75d6bb" /></label
+        ><label class="angle-control"
+          >渐变角度 <output id="angle-value">135°</output
+          ><input id="angle" type="range" min="0" max="360" value="135" aria-label="渐变角度"
+        /></label>
+      </div>
+      <code id="code" tabindex="0">background: linear-gradient(135deg, #7970e5, #75d6bb);</code
+      ><button id="copy" type="button">复制 CSS</button
+      ><span id="status" role="status" aria-live="polite"></span>
+      <footer>全部计算在浏览器完成 · <a href="/lab/" target="_top">返回实验室</a></footer>
+      <noscript><p>此工具需要启用 JavaScript。</p></noscript>
+    </main>
+    <script>
+      const start = document.getElementById('start'),
+        end = document.getElementById('end'),
+        angle = document.getElementById('angle'),
+        preview = document.getElementById('preview'),
+        code = document.getElementById('code'),
+        status = document.getElementById('status');
+      function update() {
+        const css = `linear-gradient(${angle.value}deg, ${start.value}, ${end.value})`;
+        preview.style.background = css;
+        code.textContent = `background: ${css};`;
+        document.getElementById('angle-value').textContent = angle.value + '°';
+        status.textContent = '';
+      }
+      [start, end, angle].forEach((input) => input.addEventListener('input', update));
+      document.getElementById('copy').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = '已复制到剪贴板';
+        } catch {
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          code.focus();
+          status.textContent = '已选中代码，请按 Ctrl+C 或长按复制';
+        }
+      });
+    </script>
+  </body>
+</html>

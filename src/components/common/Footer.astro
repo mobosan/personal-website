@@ -1,0 +1,35 @@
+---
+import { ArrowUpRight, Rss, Terminal } from '@lucide/astro';
+import { site } from '../../data/site';
+---
+
+<footer class="site-footer container">
+  <div class="footer-top">
+    <div>
+      <a href="/" class="brand">
+        <Terminal size={19} />
+        {site.name}
+        <span class="brand-dot">.</span>
+      </a>
+      <p>保持好奇，持续构建。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/about/">
+        关于本站 <ArrowUpRight size={14} />
+      </a>
+      <a href="/changelog/">更新日志</a>
+      <a href="/rss.xml">
+        <Rss size={14} />
+        RSS 订阅
+      </a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>
+      © {new Date().getFullYear()} {site.name}. 用想法和代码慢慢搭建。
+    </span>
+    <span>
+      <i class="status-dot"></i> Built with Astro <span class="footer-slash">/</span> v1.0
+    </span>
+  </div>
+</footer>

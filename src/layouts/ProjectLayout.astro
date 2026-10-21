@@ -1,0 +1,91 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import Badge from '../components/common/Badge.astro';
+import Tag from '../components/common/Tag.astro';
+import Button from '../components/common/Button.astro';
+import { ArrowUpRight, CodeXml } from '@lucide/astro';
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<BaseLayout title={data.title} description={data.description} image={data.cover}>
+  <div class="container page-content">
+    <div class="breadcrumb">
+      <a href="/projects/">← 全部项目</a>
+    </div>
+    <header class="page-header" style="padding-top:24px">
+      <span class="eyebrow">
+        {data.category} / {data.example ? 'CONCEPT PROJECT' : 'WEBSITE V1'}
+      </span>
+      <h1>{data.title}</h1>
+      <p>{data.subtitle}</p>
+    </header>
+    <img
+      src={data.cover}
+      alt={`${data.title} 概念封面`}
+      width="1120"
+      height="608"
+      class="project-detail-cover"
+    />
+    {data.example && (
+      <p class="sample-notice">
+        演示用途：这是概念项目，并非已开发的真实产品。配图是设计示意，不是产品运行截图。
+      </p>
+    )}
+    <div class="detail-grid">
+      <article class="prose">
+        <slot />
+        {data.screenshots.length > 0 && (
+          <section class="screenshots">
+            <h2>项目图集</h2>
+            {data.screenshots.map((shot) => (
+              <figure>
+                <img src={shot.src} alt={shot.alt} width="700" height="380" loading="lazy" />
+                <figcaption>{shot.alt}</figcaption>
+              </figure>
+            ))}
+          </section>
+        )}
+      </article>
+      <aside class="detail-aside">
+        <h2>项目信息</h2>
+        <dl>
+          <dt>当前状态</dt>
+          <dd>
+            <Badge tone={data.status === '已完成' ? 'green' : 'accent'}>{data.status}</Badge>
+          </dd>
+          <dt>项目分类</dt>
+          <dd>{data.category}</dd>
+          <dt>{data.example ? '计划技术栈' : '技术栈'}</dt>
+          <dd class="card-meta">
+            {data.stack.map((tag) => (
+              <Tag>{tag}</Tag>
+            ))}
+          </dd>
+        </dl>
+        {data.github ? (
+          <Button href={data.github} external variant="secondary">
+            <CodeXml size={15} /> 源代码
+          </Button>
+        ) : (
+          <p class="text-xs mt-6" style="color:var(--subtle)">
+            GitHub 仓库：尚未配置
+          </p>
+        )}
+        {data.demo ? (
+          <Button href={data.demo} external={data.demo.startsWith('http')}>
+            在线体验 <ArrowUpRight size={15} />
+          </Button>
+        ) : (
+          <p class="text-xs mt-3" style="color:var(--subtle)">
+            在线体验：暂未提供
+          </p>
+        )}
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

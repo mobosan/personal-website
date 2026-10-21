@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/projects/ProjectCard.astro';
+import FilterBar from '../../components/common/FilterBar.astro';
+import { getProjects } from '../../lib/content';
+const projects = await getProjects();
+---
+
+<BaseLayout title="作品集" description="从想法到作品，探索 AI、游戏开发与 Web 项目。">
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">SELECTED WORK</span>
+      <h1>想法的另一种表达。</h1>
+      <p>用代码回答好奇心。这里收集正在生长的项目，也保留尚待实现的想象。</p>
+    </header>
+    <FilterBar
+      categories={['AI', '游戏开发', 'Web', '开发工具', '其他']}
+      total={projects.length}
+      noun="个项目"
+    />
+    <div class="project-grid">
+      {projects.map((project) => (
+        <div data-filter-item data-categories={JSON.stringify([project.data.category])}>
+          <ProjectCard project={project} />
+        </div>
+      ))}
+    </div>
+    <p class="sample-notice">
+      Agent Kit 与 Tiny World 为明确标注的概念示例；Personal Space 为本站实际实现。
+    </p>
+  </div>
+</BaseLayout>

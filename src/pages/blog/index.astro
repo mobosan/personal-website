@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/blog/ArticleCard.astro';
+import FilterBar from '../../components/common/FilterBar.astro';
+import { getPosts } from '../../lib/content';
+const posts = await getPosts();
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+---
+
+<BaseLayout title="博客" description="关于 AI、Web 与创意编程的技术笔记，记录每一次探索。">
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">THE NOTEBOOK</span>
+      <h1>记录，让思考有迹可循。</h1>
+      <p>一些技术笔记，一些实践思考。把探索的过程写下来，也把问题留给下一次出发。</p>
+    </header>
+    <FilterBar categories={tags} search total={posts.length} />
+    <div class="article-list">
+      {posts.map((post) => (
+        <div
+          data-filter-item
+          data-categories={JSON.stringify(post.data.tags)}
+          data-search={`${post.data.title} ${post.data.description}`}
+        >
+          <ArticleCard post={post} />
+        </div>
+      ))}
+    </div>
+    <p class="sample-notice">当前收录 3 篇示例文章，用于展示内容与排版能力，不代表真实个人经历。</p>
+  </div>
+</BaseLayout>

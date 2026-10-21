@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, interests } from '../data/site';
+import Tag from '../components/common/Tag.astro';
+import Button from '../components/common/Button.astro';
+import { Terminal, CodeXml, Mail } from '@lucide/astro';
+---
+
+<BaseLayout title="关于" description="认识这个个人数字空间，了解技术兴趣、项目方向与联系方式。">
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">BEHIND THE SCREEN</span>
+      <h1>保持好奇，持续构建。</h1>
+      <p>一个记录想法、探索技术、分享作品的地方。</p>
+    </header>
+    <div class="about-grid">
+      <div>
+        <h2>你好，欢迎来到这里。</h2>
+        <p>{site.bio}</p>
+        <p>
+          这个网站围绕三个方向展开：用文章整理思考，用作品呈现想法，用实验验证可能性。比起追逐每一项新技术，更希望把真正有趣的问题做扎实。
+        </p>
+        <p class="sample-notice">
+          个人简介模板：尚未填写真实姓名、职业、技能熟练度与经历。请在配置和本页替换为真实信息。
+        </p>
+        <h2>关注的技术</h2>
+        <p>以下为网站预设的兴趣方向，可按实际情况调整，不代表已获得的专业认证或工作经验。</p>
+        <div class="skills">
+          {interests.map((interest) => (
+            <Tag>{interest}</Tag>
+          ))}
+        </div>
+        <h2>想探索的方向</h2>
+        <p>AI 工具与工作流、轻量 Web 应用、游戏原型，以及把设计和代码结合起来的创意编程。</p>
+        <section id="contact" class="contact-box">
+          <h2>从一次交流开始</h2>
+          <p>可以聊技术，也可以聊一个还没成形的想法。</p>
+          <div class="flex flex-wrap gap-3">
+            {site.email ? (
+              <Button href={`mailto:${site.email}`}>
+                <Mail size={16} /> 发邮件
+              </Button>
+            ) : (
+              <span class="badge badge-muted">邮箱：待填写</span>
+            )}
+            {site.github ? (
+              <Button href={site.github} external variant="secondary">
+                <CodeXml size={16} /> GitHub
+              </Button>
+            ) : (
+              <span class="badge badge-muted">GitHub：待填写</span>
+            )}
+          </div>
+          <p class="text-xs mt-4">
+            联系方式配置在 <code>src/data/site.ts</code>，填写后自动显示有效链接。
+          </p>
+        </section>
+      </div>
+      <aside class="profile-card">
+        <div class="avatar">
+          <Terminal size={30} />
+        </div>
+        <h2>{site.author}</h2>
+        <p>个人身份 / 待填写</p>
+        <dl>
+          <dt>这个空间关于</dt>
+          <dd>技术 · 创作 · 实践</dd>
+          <dt>目前在做</dt>
+          <dd>建立一个可持续更新的个人网站</dd>
+          <dt>常驻地点</dt>
+          <dd>待填写</dd>
+          <dt>一句话介绍</dt>
+          <dd>把好奇心，变成一点点作品。</dd>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

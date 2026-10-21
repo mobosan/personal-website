@@ -1,0 +1,85 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import { formatDate, readingTime } from '../lib/content';
+import Tag from '../components/common/Tag.astro';
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headings: MarkdownHeading[];
+  older?: CollectionEntry<'blog'>;
+  newer?: CollectionEntry<'blog'>;
+}
+const { post, headings, older, newer } = Astro.props;
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.cover}
+  type="article"
+>
+  <div class="container page-content">
+    <div class="breadcrumb">
+      <a href="/blog/">← 全部文章</a>
+      <span>/</span>
+      <span>技术笔记</span>
+    </div>
+    <header class="article-header">
+      <div class="card-meta">
+        {post.data.tags.map((tag) => (
+          <Tag>{tag}</Tag>
+        ))}
+      </div>
+      <h1>{post.data.title}</h1>
+      <p class="description">{post.data.description}</p>
+      <div class="article-info">
+        <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+        <span>·</span>
+        <span>{readingTime(post.body)} 分钟阅读</span>
+        {post.data.example && <span>· 示例文章</span>}
+        {post.data.updatedDate && <span>更新于 {formatDate(post.data.updatedDate)}</span>}
+      </div>
+    </header>
+    {post.data.cover && (
+      <img
+        class="project-detail-cover"
+        src={post.data.cover}
+        alt={`${post.data.title} 封面`}
+        width="1120"
+        height="600"
+      />
+    )}
+    <div class="article-layout">
+      <div>
+        <article class="prose">
+          <slot />
+        </article>
+        <nav class="post-navigation" aria-label="相邻文章">
+          {older && (
+            <a href={`/blog/${older.id}/`}>
+              <span>← 上一篇 · 更早</span>
+              <strong>{older.data.title}</strong>
+            </a>
+          )}
+          {newer && (
+            <a href={`/blog/${newer.id}/`}>
+              <span>下一篇 · 更新 →</span>
+              <strong>{newer.data.title}</strong>
+            </a>
+          )}
+        </nav>
+      </div>
+      <aside class="toc" aria-label="文章目录">
+        <h2>本篇目录</h2>
+        {headings
+          .filter((h) => h.depth === 2 || h.depth === 3)
+          .map((heading) => (
+            <a class:list={{ 'toc-nested': heading.depth === 3 }} href={`#${heading.slug}`}>
+              {heading.text}
+            </a>
+          ))}
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

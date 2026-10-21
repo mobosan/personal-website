@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ParticleField from '../../components/interactive/ParticleField';
+---
+
+<BaseLayout title="粒子场 · 独立体验">
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">INTERACTIVE / 001</span>
+      <h1>交互式粒子场</h1>
+      <p>
+        一个由简单规则连接起来的小宇宙。
+        <a class="text-link" href="/lab/particle-field/">
+          查看实验说明 →
+        </a>
+      </p>
+    </header>
+    <div class="demo-shell">
+      <ParticleField client:load />
+      <noscript>
+        <p class="sample-notice">需要启用 JavaScript 才能运行实验。</p>
+      </noscript>
+    </div>
+  </div>
+</BaseLayout>

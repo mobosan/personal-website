@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Badge from '../components/common/Badge.astro';
+import { changelog } from '../data/changelog';
+---
+
+<BaseLayout title="更新日志" description="记录这个数字空间的每一次生长，只记录已实现的功能。">
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">CHANGELOG</span>
+      <h1>一点一点，变得更好。</h1>
+      <p>记录这个网站的变化。这里没有终点，只有下一个值得打磨的细节。</p>
+    </header>
+    <div class="timeline">
+      {changelog.map((release) => (
+        <article class="release">
+          <div class="flex items-center gap-4">
+            <Badge tone="accent">v{release.version}</Badge>
+            <time class="article-date" datetime={release.date}>
+              {release.date}
+            </time>
+          </div>
+          <h2>{release.title}</h2>
+          <ul>
+            {release.changes.map((change) => (
+              <li>{change}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+    <p class="sample-notice">
+      当前为本地 V1 版本。GitHub 托管、正式域名与 Cloudflare 发布尚未执行。
+    </p>
+  </div>
+</BaseLayout>

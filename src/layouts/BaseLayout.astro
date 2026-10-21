@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/common/Navbar.astro';
+import Footer from '../components/common/Footer.astro';
+import { site } from '../data/site';
+import { site as siteUrl } from 'astro:config/client';
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+}
+const {
+  title,
+  description = site.description,
+  image = '/images/og.png',
+  noindex = false,
+  type = 'website',
+} = Astro.props;
+const socialImage = image.endsWith('.svg') ? '/images/og.png' : image;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} — 探索技术，构建有趣的东西`;
+const canonical = new URL(Astro.url.pathname, siteUrl || 'https://example.com');
+---
+
+<!doctype html>
+<html lang={site.locale} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0b0e14" />
+    {noindex && <meta name="robots" content="noindex,follow" />}
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(socialImage, canonical)} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+      } catch {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      跳到主要内容
+    </a>
+    <Navbar />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
