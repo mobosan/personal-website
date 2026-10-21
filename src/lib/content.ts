@@ -5,7 +5,10 @@ export async function getPosts() {
   );
 }
 export async function getProjects() {
-  return (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  // hidden 的项目保留内容文件但不参与列表、首页与详情页静态路由
+  return (await getCollection('projects', ({ data }) => !data.hidden)).sort(
+    (a, b) => a.data.order - b.data.order,
+  );
 }
 export const formatDate = (date: Date) =>
   new Intl.DateTimeFormat('zh-CN', {

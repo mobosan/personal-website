@@ -19,7 +19,7 @@ const { data } = project;
     </div>
     <header class="page-header" style="padding-top:24px">
       <span class="eyebrow">
-        {data.category} / {data.example ? 'CONCEPT PROJECT' : 'WEBSITE V1'}
+        {data.category} / {data.example ? 'CONCEPT PROJECT' : 'CASE STUDY'}
       </span>
       <h1>{data.title}</h1>
       <p>{data.subtitle}</p>
@@ -73,7 +73,7 @@ const { data } = project;
           </Button>
         ) : (
           <p class="text-xs mt-6" style="color:var(--subtle)">
-            GitHub 仓库：尚未配置
+            源代码：暂未公开
           </p>
         )}
         {data.demo ? (
@@ -82,7 +82,7 @@ const { data } = project;
           </Button>
         ) : (
           <p class="text-xs mt-3" style="color:var(--subtle)">
-            在线体验：暂未提供
+            在线体验：未公开部署
           </p>
         )}
       </aside>

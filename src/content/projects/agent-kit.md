@@ -11,6 +11,7 @@ screenshots:
     alt: 'Agent Kit 概念流程图：输入、模型决策、工具与输出；不是运行截图'
 featured: true
 example: true
+hidden: true
 order: 1
 ---
 

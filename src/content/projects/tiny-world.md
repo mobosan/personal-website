@@ -11,6 +11,7 @@ screenshots:
     alt: 'Tiny World 等距小岛概念插画，不是游戏运行截图'
 featured: true
 example: true
+hidden: true
 order: 2
 ---
 

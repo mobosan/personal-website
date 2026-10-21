@@ -30,6 +30,7 @@ const projects = defineCollection({
     demo: z.string().optional(),
     featured: z.boolean().default(false),
     example: z.boolean().default(true),
+    hidden: z.boolean().default(false),
     order: z.number().default(0),
   }),
 });
