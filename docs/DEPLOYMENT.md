@@ -49,6 +49,28 @@ canonical、Open Graph、RSS 与 Sitemap 会一起使用 SITE_URL。默认 examp
 
 也可在本地 `npm ci` 与 `npm run build` 后，通过 Cloudflare Pages 的 Direct Upload 上传 dist 内容。不要上传整个源代码目录、node_modules 或 .env。每次改动需要重新构建并上传。
 
+## 自定义域名绑定（外部 DNS）
+
+本站域名 `www.wzh.abrdns.com` 由 ClouDNS 免费套餐托管，**NS 不交给 Cloudflare**，因此属于 Pages 的「外部 DNS 自定义域」，不会出现在 Cloudflare 控制台的 Domains 列表中（那个列表只显示 NS 已托管到 Cloudflare 的 zone）。查看位置：**Workers & Pages → personal-website → Custom domains**。
+
+绑定记录：
+
+| host | type | points to |
+| ---- | ---- | --------- |
+| www | CNAME | personal-website-at7.pages.dev |
+
+### 已知限制：根域无法绑定
+
+ClouDNS 免费套餐**禁止根域 CNAME**，会报错 `There can't be a CNAME record for the root domain`。Cloudflare Pages 对外部 DNS 的自定义域要求一条 CNAME（`verification_data.error_message: "CNAME record not set"`），因此根域 `wzh.abrdns.com` 无法直接绑定。
+
+ClouDNS 把 ALIAS / ANAME 记录锁在付费套餐（页面提示 "Available only for premium account"），所以免费方案下只能把 `www` 作为正式地址。若需根域可访问，可选：
+
+1. 在 ClouDNS 添加 `URL Redirect` / `Web Redirect` 记录（Host 留空，目标 `https://www.wzh.abrdns.com`），前提是免费套餐提供该记录类型；
+2. 升级 ClouDNS 付费套餐使用 ALIAS；
+3. 换一个 NS 可交给 Cloudflare 托管的域名。
+
+**因此 `SITE_URL` 固定为 `https://www.wzh.abrdns.com`**，不要写成根域，否则 canonical / sitemap / RSS 都会指向一个打不开的地址。
+
 ## 部署后验证
 
 - 首页、博客、项目、实验室详情均返回成功。
