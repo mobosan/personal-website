@@ -11,6 +11,7 @@ screenshots:
     alt: '推荐卡片展开「推荐依据与各路贡献」：召回来源 usercf / mf / graph / semantic / popular，TreeSHAP 按路径归组的贡献分数'
   - src: '/images/projects/cityspark-experiments.jpg'
     alt: '实验对比页签：15 个方案在保留测试窗口上的 Recall@10 与 NDCG@10 对比表，以及柱状图'
+github: 'https://github.com/mobosan/city-spark'
 featured: true
 example: false
 order: 1

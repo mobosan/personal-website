@@ -9,6 +9,7 @@ cover: '/images/projects/graphrag-cover.svg'
 screenshots:
   - src: '/images/projects/graphrag-architecture.svg'
     alt: 'GraphRAG 处理流水线：预处理 → 索引 → 类型化图校验 → 检索服务，四个阶段'
+github: 'https://github.com/mobosan/graphrag-agent'
 featured: false
 example: false
 order: 4
