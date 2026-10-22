@@ -1393,7 +1393,11 @@ h3 {
   .article-layout {
     display: flex;
     flex-direction: column-reverse;
+    align-items: stretch;
     gap: 20px;
+  }
+  .article-layout > * {
+    min-width: 0;
   }
   .toc {
     position: static;
