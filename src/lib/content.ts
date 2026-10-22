@@ -1,4 +1,6 @@
 import { getCollection } from 'astro:content';
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 export async function getPosts() {
   return (await getCollection('blog', ({ data }) => !data.draft)).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -9,6 +11,17 @@ export async function getProjects() {
   return (await getCollection('projects', ({ data }) => !data.hidden)).sort(
     (a, b) => a.data.order - b.data.order,
   );
+}
+export async function getSkills() {
+  return (await getCollection('skills', ({ data }) => !data.draft)).sort(
+    (a, b) =>
+      b.data.updatedDate.valueOf() - a.data.updatedDate.valueOf() || a.id.localeCompare(b.id),
+  );
+}
+export async function getSkillDownload(download: string) {
+  // Read only repository-owned packages at build time; a missing archive fails the build.
+  const bytes = await readFile(`public${download}`);
+  return { size: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
 }
 export const formatDate = (date: Date) =>
   new Intl.DateTimeFormat('zh-CN', {

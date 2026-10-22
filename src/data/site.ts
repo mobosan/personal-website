@@ -12,6 +12,7 @@ export const navigation = [
   { label: '首页', href: '/' },
   { label: '博客', href: '/blog/' },
   { label: '作品集', href: '/projects/' },
+  { label: 'Skills', href: '/skills/' },
   { label: '实验室', href: '/lab/' },
   { label: '关于', href: '/about/' },
 ];

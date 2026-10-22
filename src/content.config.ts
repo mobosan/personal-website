@@ -34,4 +34,17 @@ const projects = defineCollection({
     order: z.number().default(0),
   }),
 });
-export const collections = { blog, projects };
+const skills = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/skills' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    version: z.string(),
+    updatedDate: z.coerce.date(),
+    tags: z.array(z.string()),
+    requirements: z.array(z.string()),
+    download: z.string().regex(/^\/downloads\/skills\/[a-z0-9-]+\.zip$/),
+    draft: z.boolean().default(true),
+  }),
+});
+export const collections = { blog, projects, skills };

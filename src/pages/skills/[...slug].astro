@@ -1,0 +1,94 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/common/Tag.astro';
+import { Download } from '@lucide/astro';
+import { getSkills, getSkillDownload, formatDate } from '../../lib/content';
+export async function getStaticPaths() {
+  return (await getSkills()).map((skill) => ({ params: { slug: skill.id }, props: { skill } }));
+}
+const { skill } = Astro.props;
+const { data } = skill;
+const { Content } = await render(skill);
+const archive = await getSkillDownload(data.download);
+---
+
+<BaseLayout title={data.title} description={data.description}>
+  <div class="container page-content">
+    <div class="breadcrumb">
+      <a href="/skills/">← 全部 Skills</a>
+    </div>
+    <header class="page-header">
+      <span class="eyebrow">SKILL / {skill.id}</span>
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
+    </header>
+    <div class="detail-grid">
+      <article class="prose">
+        <Content />
+      </article>
+      <aside class="detail-aside">
+        <h2>下载与使用</h2>
+        <div class="card-meta">
+          {data.tags.map((tag) => (
+            <Tag>{tag}</Tag>
+          ))}
+        </div>
+        <dl>
+          <dt>版本</dt>
+          <dd>{data.version}</dd>
+          <dt>分享包更新</dt>
+          <dd>
+            <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate)}</time>
+          </dd>
+          <dt>文件大小</dt>
+          <dd>{(archive.size / 1024).toFixed(1)} KB · ZIP</dd>
+          <dt>使用条件</dt>
+          <dd>
+            <ul>
+              {data.requirements.map((requirement) => (
+                <li>{requirement}</li>
+              ))}
+            </ul>
+          </dd>
+        </dl>
+        <a class="button button-primary" href={data.download} download>
+          <Download size={16} /> 下载完整 Skill
+        </a>
+        <p class="download-note">
+          解压后保留完整目录，按你的 AI 工具支持的方式安装。下载不会自动安装。
+        </p>
+        <details>
+          <summary>SHA-256 校验值</summary>
+          <code class="checksum">{archive.sha256}</code>
+        </details>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-top: 24px;
+  }
+  .detail-aside ul {
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .download-note,
+  details {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 20px;
+    line-height: 1.8;
+  }
+  summary {
+    cursor: pointer;
+  }
+  .checksum {
+    display: block;
+    overflow-wrap: anywhere;
+    margin-top: 8px;
+  }
+</style>

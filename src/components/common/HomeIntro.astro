@@ -1,0 +1,348 @@
+---
+import { site } from '../../data/site';
+---
+
+<div id="home-intro" class="home-intro" hidden>
+  <div class="intro-grid" aria-hidden="true"></div>
+  <div class="intro-scene" aria-hidden="true">
+    <span class="intro-coordinate">PERSONAL UNIVERSE / 001</span>
+    <svg class="intro-orbits" viewBox="0 0 640 640" fill="none">
+      <circle class="intro-guide" cx="320" cy="320" r="285" stroke-dasharray="2 12" />
+      <g class="intro-wireframe">
+        <circle cx="320" cy="320" r="205" pathLength="1" />
+        {[0, 45, 90, 135].map((angle) => (
+          <ellipse
+            cx="320"
+            cy="320"
+            rx="205"
+            ry="68"
+            transform={`rotate(${angle} 320 320)`}
+            pathLength="1"
+          />
+        ))}
+        <ellipse
+          cx="320"
+          cy="320"
+          rx="270"
+          ry="95"
+          transform="rotate(-28 320 320)"
+          pathLength="1"
+        />
+      </g>
+      <g class="intro-stars" fill="var(--cyan)">
+        <circle cx="80" cy="448" r="4" />
+        <circle cx="558" cy="192" r="4" />
+        <path d="M320 25v14m-7-7h14M590 410v12m-6-6h12M73 220v12m-6-6h12" stroke="var(--accent)" />
+      </g>
+    </svg>
+    <div class="intro-title">
+      <span class="intro-terminal">&gt;_</span>
+      <p class="intro-wordmark">
+        {site.name}
+        <span>.</span>
+      </p>
+      <p class="intro-tagline">让好奇心，成为新的可能。</p>
+    </div>
+    <div class="intro-caption">
+      <span>IDEAS</span>
+      <i></i>
+      <span>REALITY</span>
+    </div>
+  </div>
+  <button class="intro-skip" type="button">
+    跳过开场 <span aria-hidden="true">ESC ↗</span>
+  </button>
+</div>
+
+<script is:inline>
+  (() => {
+    const intro = document.getElementById('home-intro');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const storageKey = 'personal-space:intro-seen';
+    let controls;
+    let timer;
+    let returnFocus;
+    function finish() {
+      if (intro.hidden) return;
+      const focusedInside = intro.contains(document.activeElement);
+      intro.hidden = true;
+      controls?.abort();
+      clearTimeout(timer);
+      if (focusedInside) {
+        const target = returnFocus?.isConnected ? returnFocus : document.getElementById('main');
+        if (target) {
+          const temporary = !target.hasAttribute('tabindex') && target.tagName === 'MAIN';
+          if (temporary) target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+          if (temporary)
+            target.addEventListener('blur', () => target.removeAttribute('tabindex'), {
+              once: true,
+            });
+        }
+      }
+    }
+    function play(trigger) {
+      if (reduced.matches || !intro.hidden) return;
+      returnFocus = trigger;
+      controls = new AbortController();
+      const options = { signal: controls.signal };
+      intro.hidden = false;
+      intro.addEventListener(
+        'animationend',
+        (event) => {
+          if (event.target === intro) finish();
+        },
+        options,
+      );
+      intro.querySelector('button').addEventListener('click', finish, options);
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key === 'Escape' || event.key === 'Tab') finish();
+        },
+        options,
+      );
+      window.addEventListener('wheel', finish, { ...options, passive: true });
+      window.addEventListener('touchmove', finish, { ...options, passive: true });
+      window.addEventListener('pagehide', finish, options);
+      reduced.addEventListener('change', finish, options);
+      timer = setTimeout(finish, 2400);
+    }
+    // Fail open: disabled storage, reduced motion and anchor visits show the page immediately.
+    try {
+      const seen = sessionStorage.getItem(storageKey);
+      sessionStorage.setItem(storageKey, '1');
+      if (!seen && !location.hash && document.visibilityState === 'visible') play();
+    } catch {
+      /* The homepage is already visible. */
+    }
+    function wireReplay() {
+      const replay = document.querySelector('[data-replay-intro]');
+      if (!replay) return;
+      replay.hidden = reduced.matches;
+      replay.addEventListener('click', () => play(replay));
+      reduced.addEventListener('change', () => {
+        replay.hidden = reduced.matches;
+      });
+    }
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', wireReplay, { once: true });
+    else wireReplay();
+  })();
+</script>
+
+<style>
+  .home-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    animation: intro-curtain 2.2s cubic-bezier(0.76, 0, 0.24, 1) both;
+  }
+  .home-intro[hidden] {
+    display: none;
+  }
+  .intro-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at center, #0003, transparent 70%);
+  }
+  .intro-scene {
+    position: relative;
+    width: min(620px, 92vw, 86svh);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+  }
+  .intro-scene::before {
+    content: '';
+    position: absolute;
+    inset: 15%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-wash), transparent 70%);
+  }
+  .intro-orbits {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: intro-orbit 2.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .intro-guide {
+    stroke: var(--subtle);
+    opacity: 0.4;
+  }
+  .intro-wireframe {
+    stroke: var(--accent);
+    stroke-width: 0.8;
+    opacity: 0.65;
+  }
+  .intro-wireframe > * {
+    stroke-dasharray: 1;
+    animation: intro-draw 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  }
+  .intro-wireframe > :nth-child(even) {
+    animation-delay: 0.12s;
+    stroke: var(--cyan);
+  }
+  .intro-stars {
+    animation: intro-appear 1s 0.2s both;
+  }
+  .intro-title {
+    position: relative;
+    text-align: center;
+    padding: 28px 12px;
+    width: 100%;
+    background: radial-gradient(ellipse, var(--bg) 30%, transparent 72%);
+  }
+  .intro-terminal {
+    color: var(--accent);
+    font: 20px var(--font-mono);
+    display: block;
+    margin-bottom: 20px;
+    animation: intro-appear 0.5s 0.12s both;
+  }
+  .intro-wordmark {
+    font-size: clamp(30px, 7vw, 64px);
+    line-height: 1.2;
+    font-weight: 750;
+    letter-spacing: -0.055em;
+    margin: 0;
+    animation: intro-word 0.9s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .intro-wordmark span {
+    color: var(--accent);
+  }
+  .intro-tagline {
+    color: var(--muted);
+    font-size: clamp(12px, 2.8vw, 14px);
+    letter-spacing: 0.18em;
+    margin-top: 20px;
+    animation: intro-appear 0.6s 0.65s both;
+  }
+  .intro-coordinate,
+  .intro-caption {
+    position: absolute;
+    font: 9px var(--font-mono);
+    letter-spacing: 0.18em;
+    color: var(--subtle);
+  }
+  .intro-coordinate {
+    top: 0;
+    animation: intro-appear 0.6s both;
+  }
+  .intro-caption {
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: intro-appear 0.6s 0.4s both;
+  }
+  .intro-caption i {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--accent);
+    transform-origin: left;
+    animation: intro-line 1.25s 0.2s both;
+  }
+  .intro-skip {
+    position: absolute;
+    right: max(24px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .intro-skip span {
+    margin-left: 16px;
+    font-size: 10px;
+    color: var(--subtle);
+  }
+  .intro-skip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  @keyframes intro-curtain {
+    0%,
+    73% {
+      clip-path: inset(0);
+    }
+    100% {
+      clip-path: inset(0 0 100% 0);
+      visibility: hidden;
+    }
+  }
+  @keyframes intro-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes intro-orbit {
+    0% {
+      opacity: 0;
+      transform: scale(0.65) rotate(-35deg);
+    }
+    30%,
+    70% {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.3) rotate(12deg);
+    }
+  }
+  @keyframes intro-word {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      letter-spacing: 0.08em;
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      letter-spacing: -0.055em;
+      filter: blur(0);
+    }
+  }
+  @keyframes intro-appear {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes intro-line {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-intro {
+      display: none;
+    }
+  }
+</style>

@@ -20,7 +20,15 @@ Markdown/MDX → Content Collections schema → 构建时查询 → Astro 组件
 
 主题初始化脚本在 head 中读取 localStorage，默认深色，减少首次加载闪烁；存储不可用时仍可切换。移动端菜单有 aria-expanded、Escape 关闭与焦点返回。跳转链接支持键盘跳过导航。
 
+## Skill 分享（2026-10-22）
+
+对应 REQ-SKILLS，沿用 Content Collections，内容位于 `src/content/skills/`，`getSkills()` 统一过滤草稿与排序。列表和详情复用 BaseLayout、Card、Tag、FilterBar 及现有主题。完整 ZIP 位于 `public/downloads/skills/`，只包含作者选定的个人 Skill 文件。详情构建时读取包，计算真实大小和 SHA-256；缺失包会使构建失败。下载采用原生链接，无上传接口或执行服务。
+
+ZIP 是经过选择的分享快照，不在构建时扫描本机 Skill 目录；其他机器只需仓库即可构建。`public/` 不受草稿标记保护，撤回分享时同时移除包和内容入口。原始文件未修改，包内历史验证声明不等同于本轮验证。
+
 ## JavaScript 边界
+
+首页开场由 `HomeIntro.astro` 局部承载，使用 SVG、CSS 关键帧与原生脚本；只有首页引入。通过 sessionStorage 记录当前标签页是否看过，默认隐藏，符合播放条件才显现；正文始终静态输出。CSS 在 2.2 秒完成揭幕，脚本通过 animationend 清理，并设 2.4 秒超时兜底。跳过、Escape、Tab、滚动、减少动画偏好变化及 pagehide 都能结束；不锁定滚动，不抢初始焦点，结束时清理本次监听与定时器。重播保留明确入口与焦点返回。
 
 导航、主题与列表筛选使用原生 JavaScript。React 仅用于粒子实验，详情页通过 `client:visible` 加载，独立入口通过 `client:load` 加载。粒子数量上限 150，连线算法 O(n²)，适合此规模；未来大量粒子应替换空间索引。
 

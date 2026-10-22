@@ -83,7 +83,30 @@ order: 4
 
 保留 `type: 'api'` / `status: '规划中'`，只有后端完成后才修改状态类型并实现运行 UI。密钥在服务端；浏览器仅调用公开接口。至少实现超时、取消、限流、错误状态与敏感信息处理。当前 API 类型不会发送任何请求。
 
+## 分享个人 Skill
+
+1. 选择要公开的 Skill 文件，保留 `SKILL.md` 及它引用的 `references/`、`assets/`、`scripts/` 等资源。不要把系统插件、凭据或个人运行档案一起打包。
+2. 将已检查的完整 Skill 文件夹压缩成 ZIP，保留一层同名根目录。放入 `public/downloads/skills/<名称>-<快照日期>.zip`，文件名仅用小写字母、数字和连字符。以后更新用新文件名，保留已分享地址的兼容性。
+3. 在 `src/content/skills/<名称>.md` 填写以下 frontmatter，正文说明用途、安装、调用示例、依赖和限制：
+
+```yaml
+title: '真实 Skill 名称'
+description: '实际用途'
+version: '原版本号或快照日期'
+updatedDate: 2026-10-22
+tags: ['学习']
+requirements: ['实际需要的工具和权限']
+download: '/downloads/skills/my-skill-2026-10-22.zip'
+draft: true
+```
+
+核对后将 `draft` 改为 `false`，列表与详情自动生成。详情会计算文件大小与 SHA-256，无需手填。草稿只隐藏页面，`public/` 中的文件仍可直接访问；未公开的包不要放入 public，撤回包时同时移除相关入口。原始 Skill 文件保留在本地，不会被网站改写，也不会在构建时自动同步。
+
+执行类型检查、构建、链接检查和 `npx playwright test tests/skills.spec.ts`，核对下载包完整性。先启动生产预览，避免测试复用开发服务器；4321 已占用时在临时测试配置中选独立端口。测试中的首次分享清单需要随实际内容更新。此流程仅准备本地网站内容，线上发布仍按部署指南单独执行。
+
 ## 主题与资料
+
+首页开场组件在 `src/components/common/HomeIntro.astro`，文案沿用 `site.name`，主题使用现有 CSS 变量。首页“重播开场”可预览；每个标签页首次自动展示一次，减少动画偏好下不展示。修改节奏时同时调整 CSS 的 2.2 秒结束时间与脚本的 2.4 秒兜底，并运行 `npx playwright test tests/intro.spec.ts`，检查退出、焦点、主题和无脚本退化。
 
 修改 `src/styles/global.css` 顶部变量统一调整主题，避免在组件中重复主题颜色。`src/data/site.ts` 控制站名、简介、语言、邮箱、GitHub；邮箱和 GitHub 为空时只显示待填写信息。姓名、经历与熟练度必须自行提供真实内容。
 

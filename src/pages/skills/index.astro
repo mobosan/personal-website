@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Card from '../../components/common/Card.astro';
+import Tag from '../../components/common/Tag.astro';
+import FilterBar from '../../components/common/FilterBar.astro';
+import { ArrowUpRight, BookOpen, Boxes } from '@lucide/astro';
+import { getSkills, formatDate } from '../../lib/content';
+const skills = await getSkills();
+const categories = [...new Set(skills.flatMap((skill) => skill.data.tags))];
+---
+
+<BaseLayout
+  title="Skills"
+  description="分享我制作的 AI Skills：从建模参考到学习陪练，下载完整工作流，在自己的 AI 助手中使用。"
+>
+  <div class="container page-content">
+    <header class="page-header">
+      <span class="eyebrow">TOOLS FOR YOUR AI</span>
+      <h1>把好方法，变成可复用的 Skill。</h1>
+      <p>这里分享我制作的 AI 工作流。了解它能做什么、需要什么，再带到自己的助手里使用。</p>
+    </header>
+    {skills.length > 0 ? (
+      <>
+        <FilterBar categories={categories} total={skills.length} noun="个 Skill" />
+        <div class="project-grid skill-grid">
+          {skills.map((skill) => (
+            <div data-filter-item data-categories={JSON.stringify(skill.data.tags)}>
+              <Card class="skill-card">
+                <div class="card-body">
+                  <span class="skill-mark" aria-hidden="true">
+                    {skill.data.tags.includes('学习') ? (
+                      <BookOpen size={26} />
+                    ) : (
+                      <Boxes size={26} />
+                    )}
+                  </span>
+                  <div class="card-meta">
+                    {skill.data.tags.map((tag) => (
+                      <Tag>{tag}</Tag>
+                    ))}
+                  </div>
+                  <h2>
+                    <a href={`/skills/${skill.id}/`}>
+                      {skill.data.title} <ArrowUpRight size={16} />
+                    </a>
+                  </h2>
+                  <p>{skill.data.description}</p>
+                  <div class="skill-footer">
+                    <span>{skill.data.version}</span>
+                    <time datetime={skill.data.updatedDate.toISOString()}>
+                      {formatDate(skill.data.updatedDate)}
+                    </time>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          ))}
+        </div>
+      </>
+    ) : (
+      <p class="empty-state">第一份 Skill 正在整理中，稍后再来看看。</p>
+    )}
+    <section class="skill-guide prose" aria-labelledby="skill-guide-title">
+      <h2 id="skill-guide-title">从下载到使用</h2>
+      <ol>
+        <li>打开详情页，查看适用场景、依赖和使用示例。</li>
+        <li>下载 ZIP 并解压，保留完整 Skill 文件夹及其中的参考资料。</li>
+        <li>通过所用 AI 助手支持的方式安装或导入，确认已加载后开始使用。</li>
+      </ol>
+      <p>
+        Skill 是交给 AI 助手的工作说明和配套文件。下载后需要在支持 Skills
+        的工具中使用，具体能力取决于该工具提供的功能。
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  :global(.skill-card) {
+    height: 100%;
+  }
+  .skill-mark {
+    display: inline-flex;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--accent-wash);
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .card-body h2 {
+    font-size: 20px;
+    margin: 18px 0 12px;
+  }
+  .card-body h2 a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .skill-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--subtle);
+    font-size: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    margin-top: 24px;
+  }
+  .skill-guide {
+    border-top: 1px solid var(--line);
+    margin-top: 56px;
+    padding-top: 20px;
+  }
+  .skill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 768px) {
+    .skill-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
