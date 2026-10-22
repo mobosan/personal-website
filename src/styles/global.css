@@ -914,6 +914,21 @@ h3 {
   padding: 0;
   color: inherit;
 }
+.prose figure {
+  margin: 26px 0;
+}
+.prose figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.prose figcaption {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
 .prose blockquote {
   border-left: 2px solid var(--accent);
   padding: 1px 20px;
