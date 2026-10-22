@@ -11,7 +11,7 @@ screenshots:
     alt: 'GraphRAG 处理流水线：预处理 → 索引 → 类型化图校验 → 检索服务，四个阶段'
 featured: false
 example: false
-order: 3
+order: 4
 ---
 
 ## 场景

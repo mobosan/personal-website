@@ -11,9 +11,9 @@ screenshots:
     alt: 'FlowPilot 自愈工作台：同步完成 2 笔订单、修复 1 次，展示订单流程、执行时间线、修复知识库与历史记录'
   - src: '/images/projects/flowpilot-mobile.jpg'
     alt: '同一工作台的移动端布局，窄屏下流程与任务面板纵向排列'
-featured: true
+featured: false
 example: false
-order: 2
+order: 3
 ---
 
 ## 为什么做这个
