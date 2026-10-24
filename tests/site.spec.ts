@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+// Homepage behavior is tested after entry; intro.spec.ts covers the entrance itself.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('personal-space:particle-intro-seen', '1'));
+});
 const routes = [
   '/',
   '/blog/',

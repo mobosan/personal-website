@@ -106,7 +106,7 @@ draft: true
 
 ## 主题与资料
 
-首页开场组件在 `src/components/common/HomeIntro.astro`，文案沿用 `site.name`，主题使用现有 CSS 变量。首页“重播开场”可预览；每个标签页首次自动展示一次，减少动画偏好下不展示。修改节奏时同时调整 CSS 的 2.2 秒结束时间与脚本的 2.4 秒兜底，并运行 `npx playwright test tests/intro.spec.ts`，检查退出、焦点、主题和无脚本退化。
+首页开场组件在 `src/components/common/HomeIntro.astro`，绘图与交互在同目录 `home-intro.ts`，文案沿用 `site.name`，主题使用现有 CSS 变量。首页“重播开场”可预览；每个标签页首次展示一次，等待点击或 Enter，再扩散进入首页；减少动画偏好下不展示。修改过渡节奏时同步 CSS 的 1 秒淡出、脚本的 1000ms 扩散和 1150ms 关闭兜底。运行 `npx playwright test tests/intro.spec.ts`，检查等待、实际帧变化、暂停、点击/键盘、退出后停止绘图、焦点恢复、主题与无脚本退化。其他首页测试使用已进入状态，开场专项单独使用新会话验证。
 
 修改 `src/styles/global.css` 顶部变量统一调整主题，避免在组件中重复主题颜色。`src/data/site.ts` 控制站名、简介、语言、邮箱、GitHub；邮箱和 GitHub 为空时只显示待填写信息。姓名、经历与熟练度必须自行提供真实内容。
 
