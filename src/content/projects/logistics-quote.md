@@ -14,7 +14,7 @@ screenshots:
 github: 'https://github.com/mobosan/logistics-quote'
 featured: true
 example: false
-order: 1
+order: 2
 ---
 
 ## 一个真实的摩擦点

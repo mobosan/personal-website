@@ -10,9 +10,9 @@ screenshots:
   - src: '/images/projects/shudiantong-full.jpg'
     alt: '智能问数工作台：店长账号提问"上周各门店缺货率是多少"，返回本期缺货率 11.43%，并展开指标口径与只读 SQL'
 github: 'https://github.com/mobosan/shudiantong-ai-bi'
-featured: true
+featured: false
 example: false
-order: 3
+order: 4
 ---
 
 ## 想解决的问题

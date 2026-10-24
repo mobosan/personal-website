@@ -12,7 +12,7 @@ screenshots:
 github: 'https://github.com/mobosan/graphrag-agent'
 featured: false
 example: false
-order: 5
+order: 6
 ---
 
 ## 场景
