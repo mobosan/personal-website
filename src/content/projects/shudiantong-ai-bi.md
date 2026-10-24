@@ -12,7 +12,7 @@ screenshots:
 github: 'https://github.com/mobosan/shudiantong-ai-bi'
 featured: true
 example: false
-order: 2
+order: 3
 ---
 
 ## 想解决的问题

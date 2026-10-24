@@ -7,9 +7,9 @@ status: '已完成'
 stack: ['Astro', 'TypeScript', 'Tailwind']
 cover: '/images/website.svg'
 demo: '/'
-featured: true
+featured: false
 example: false
-order: 5
+order: 6
 ---
 
 ## 把内容与实验放在一起
